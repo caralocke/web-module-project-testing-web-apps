@@ -3,6 +3,7 @@ import {render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import ContactForm from './ContactForm';
+import { select } from 'async';
 
 test('renders without errors', ()=>{
     //Arrange
@@ -67,7 +68,18 @@ test('renders ONE error message if user enters a valid first name and last name 
 });
 
 test('renders "email must be a valid email address" if an invalid email is entered', async () => {
-    
+    //Arrange
+    render(<ContactForm/>) //Render the ContactForm.
+    //Act
+    const firstNameInput = screen.getByLabelText(/first name*/i) //Select the firstName input.
+    const lastNameInput = screen.getByLabelText(/last name*/i) //Select the lastName input.
+    const emailInput = screen.getByLabelText(/email*/i) //Select the email input.
+    userEvent.type(firstNameInput, 'Brandon') //Type in firstName input.
+    userEvent.type(lastNameInput, 'Locke') //Type in lastName input.
+    userEvent.type(emailInput, 'test@com') //Type invalid email in email input.
+    const emailError = await screen.findByText(/error: email/i)
+    //Assertions
+    expect(emailInput).toBeInTheDocument() //Assert that the email error message shows as it should.
 });
 
 // test('renders "lastName is a required field" if an last name is not entered and the submit button is clicked', async () => {
