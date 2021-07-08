@@ -120,6 +120,27 @@ test('renders all firstName, lastName and email text when submitted. Does NOT re
     expect(displayedMessage).not.toBeInTheDocument() //Make sure the displayedMessage does NOT appear in the document.
 });
 
-// test('renders all fields text when all fields are submitted.', async () => {
-    
-// });
+test('renders all fields text when all fields are submitted.', async () => {
+    //Arrange
+    render(<ContactForm/>) //Render the ContactForm
+    //Act
+    const firstNameInput = screen.getByLabelText(/first name*/i) //Select the firstName input.
+    const lastNameInput = screen.getByLabelText(/last name*/i) //Select the lastName input.
+    const emailInput = screen.getByLabelText(/email*/i) //Select the email input.
+    const messageInput = screen.getByLabelText(/message/i) //Select the message input.
+    const submitBtn = screen.getByRole('button') //Select the submit button.
+    userEvent.type(firstNameInput, 'Brandon') //Type a valid first name.
+    userEvent.type(lastNameInput, 'Locke') //Type a last name.
+    userEvent.type(emailInput, 'test@test.com') //Type a valid email.
+    userEvent.type(messageInput, 'test message') //Type into the message input
+    userEvent.click(submitBtn) //Click the submit button.  
+    const displayedFirstName = await screen.findByTestId(/firstnamedisplay/i) //Wait until after the submit to select the displayed first name.
+    const displayedLastName = await screen.findByTestId(/lastnamedisplay/i) //Wait until after the submit to select the displayed last name.
+    const displayedEmail = await screen.findByTestId(/emaildisplay/i) //Wait until after the submit to select the displayed email.
+    const displayedMessage = await screen.findByTestId(/messagedisplay/i) //Wait until after the submit to select the messageDisplay
+    //Assertions
+    expect(displayedFirstName).toBeInTheDocument() //Make sure the displayedFirstName appears in the document.
+    expect(displayedLastName).toBeInTheDocument() //Make sure the displayedLastName appears in the document.
+    expect(displayedEmail).toBeInTheDocument() //Make sure the displayedEmail appears in the document.
+    expect(displayedMessage).toBeInTheDocument() //Make sure the displayedMessage does NOT appear in the document.
+});
