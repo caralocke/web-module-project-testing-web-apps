@@ -97,9 +97,28 @@ test('renders "lastName is a required field" if a last name is not entered and t
     expect(lastNameError).toBeInTheDocument()// Make sure the lastNameError appears in the document.
 });
 
-// test('renders all firstName, lastName and email text when submitted. Does NOT render message if message is not submitted.', async () => {
-    
-// });
+test('renders all firstName, lastName and email text when submitted. Does NOT render message if message is not submitted.', async () => {
+    //Arrange
+    render(<ContactForm/>) //Render the ContactForm
+    //Act
+    const firstNameInput = screen.getByLabelText(/first name*/i) //Select the firstName input.
+    const lastNameInput = screen.getByLabelText(/last name*/i) //Select the lastName input.
+    const emailInput = screen.getByLabelText(/email*/i) //Select the email input.
+    const submitBtn = screen.getByRole('button') //Select the submit button.
+    userEvent.type(firstNameInput, 'Brandon') //Type a valid first name.
+    userEvent.type(lastNameInput, 'Locke') //Type a last name.
+    userEvent.type(emailInput, 'test@test.com') //Type a valid email.
+    userEvent.click(submitBtn) //Click the submit button.
+    const displayedFirstName = await screen.findByTestId(/firstnamedisplay/i) //Wait until after the submit to select the displayed first name.
+    const displayedLastName = await screen.findByTestId(/lastnamedisplay/i) //Wait until after the submit to select the displayed last name.
+    const displayedEmail = await screen.findByTestId(/emaildisplay/i) //Wait until after the submit to select the displayed email.
+    const displayedMessage = screen.queryByTestId(/messagedisplay/i) //Query about the messageDisplay
+    //Assertions
+    expect(displayedFirstName).toBeInTheDocument() //Make sure the displayedFirstName appears in the document.
+    expect(displayedLastName).toBeInTheDocument() //Make sure the displayedLastName appears in the document.
+    expect(displayedEmail).toBeInTheDocument() //Make sure the displayedEmail appears in the document.
+    expect(displayedMessage).not.toBeInTheDocument() //Make sure the displayedMessage does NOT appear in the document.
+});
 
 // test('renders all fields text when all fields are submitted.', async () => {
     
